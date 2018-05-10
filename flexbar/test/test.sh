@@ -61,6 +61,9 @@ export obs_dir=${script_dir}/fixtures/obs
 
 mkdir -p ${obs_dir}
 
+# remove old test results:
+rm -f ${obs_dir}/*fastq
+
 # optimal run time, higher numbers have no effect:
 
 export num_threads=4
@@ -72,7 +75,7 @@ export num_threads=4
 # ok/not ok test results into tsv file, and diagnostic info into log
 # file.
 
-cat test_library_names.tsv | \
+cat ${script_dir}/fixtures/test_descriptions.tsv | tail -n +2 | cut -f1 | \
     perl -lne '
 BEGIN {
         @fields = qw( library is_ok );
@@ -103,7 +106,20 @@ print join "\t", @val{ @fields };
          1>test_flexbar.tsv \
          2>test_flexbar.log
 
+num_exp_tests=`tail -n +2 ${script_dir}/fixtures/test_descriptions.tsv | wc -l`
 
-test_exit_status=`grep -c 'not ok' test_flexbar.tsv`
+num_obs_tests=`tail -n +2 test_flexbar.tsv | wc -l`
 
-exit ${test_exit_status}
+if [[ ${num_exp_tests} -ne ${num_obs_tests} ]] ; then
+    echo "expected to run ${num_exp_tests} tests, got ${num_obs_tests}"
+    exit 2
+fi
+
+num_failed_tests=`grep -c 'not ok' test_flexbar.tsv`
+
+if [[ ${num_failed_tests} -ne 0 ]] ; then
+    echo "${num_failed_tests} failed tests"
+    exit 2
+fi
+
+exit 0
