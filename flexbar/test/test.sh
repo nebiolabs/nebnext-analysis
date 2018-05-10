@@ -87,15 +87,23 @@ BEGIN {
 $status = 0;
 $val{library} = $_;
 
-$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --target $ENV{obs_dir}/$val{library}.end_right.adp_ilmn_13 --adapters $ENV{adapter_dir}/ilmn_13.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads}};
+$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --target $ENV{obs_dir}/$val{library}.end_left.adp_tso.new --adapters $ENV{adapter_dir}/tso.new.fasta --adapter-trim-end LEFT --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
-$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.end_right.adp_ilmn_13_1.fastq --reads2 $ENV{obs_dir}/$val{library}.end_right.adp_ilmn_13_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/tso.new.fasta --adapter-trim-end LEFT --threads $ENV{num_threads}};
+$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.end_left.adp_tso.new_1.fastq --reads2 $ENV{obs_dir}/$val{library}.end_left.adp_tso.new_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_13.tso.new.fasta --adapter-trim-end RIGHT --adapter-revcomp --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
 for $mate (1, 2) {
+        # temp patch for the case where in one of the previous steps,
+        # flexbar discarded all the reads in a file, so subsequent
+        # flexbar calls for empty inputs do not create output files:
+
+        $cmd = qq{touch $ENV{obs_dir}/$val{library}_${mate}.fastq};
+        print {*STDERR} "$cmd";
+        system $cmd;
+
         $cmd = qq{diff $ENV{exp_dir}/$val{library}_${mate}.fastq $ENV{obs_dir}/$val{library}_${mate}.fastq >/dev/null};
         print {*STDERR} "$cmd";
         system $cmd and $status++;
