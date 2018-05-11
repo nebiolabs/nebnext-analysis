@@ -91,7 +91,7 @@ $cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fa
 print {*STDERR} "$cmd";
 system $cmd;
 
-$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_1.fastq --reads2 $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_13.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads} --align-log ALL};
+$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_1.fastq --reads2 $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
