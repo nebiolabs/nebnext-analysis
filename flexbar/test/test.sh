@@ -62,7 +62,7 @@ export obs_dir=${script_dir}/fixtures/obs
 mkdir -p ${obs_dir}
 
 # remove old test results:
-rm -f ${obs_dir}/*fastq
+rm -f ${obs_dir}/*.fastq ${obs_dir}/*.log
 
 # optimal run time, higher numbers have no effect:
 
@@ -87,11 +87,11 @@ BEGIN {
 $status = 0;
 $val{library} = $_;
 
-$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --target $ENV{obs_dir}/$val{library}.end_left.adp_tso.new --adapters $ENV{adapter_dir}/tso.new.fasta --adapter-trim-end LEFT --threads $ENV{num_threads} --align-log ALL};
+$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --target $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also --adapters $ENV{adapter_dir}/tso.new.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
-$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.end_left.adp_tso.new_1.fastq --reads2 $ENV{obs_dir}/$val{library}.end_left.adp_tso.new_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_13.tso.new.fasta --adapter-trim-end RIGHT --adapter-revcomp ALSO --threads $ENV{num_threads} --align-log ALL};
+$cmd = qq{flexbar --reads $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_1.fastq --reads2 $ENV{obs_dir}/$val{library}.tso_left_right_revcomp_also_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_13.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
