@@ -87,7 +87,13 @@ BEGIN {
 $status = 0;
 $val{library} = $_;
 
-$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20.tso_wo_hp.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --htrim-left GT --htrim-right CA --htrim-min-length 3 --htrim-max-length 5 --htrim-max-first --htrim-adapter --threads $ENV{num_threads} --align-log ALL};
+$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --stdout-reads --adapters $ENV{adapter_dir}/tso_wo_hp.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --htrim-left GT --htrim-right CA --htrim-min-length 3 --htrim-max-length 5 --htrim-max-first --htrim-adapter --threads $ENV{num_threads} --align-log ALL | flexbar --reads - --interleaved --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads} --align-log ALL};
+print {*STDERR} "$cmd";
+system $cmd;
+
+# remove "_1" and "_2" appended to reads 1 and 2 by flexbar interleave/deinterleave process:
+$cmd = q{perl -i -lpe "if (\$. % 4 == 1) { s{_[12]\z}{}xms; }" } .
+       qq{$ENV{obs_dir}/$val{library}_[12].fastq};
 print {*STDERR} "$cmd";
 system $cmd;
 
