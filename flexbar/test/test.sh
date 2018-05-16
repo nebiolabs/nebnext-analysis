@@ -87,7 +87,7 @@ BEGIN {
 $status = 0;
 $val{library} = $_;
 
-$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --stdout-reads --adapters $ENV{adapter_dir}/tso_wo_hp.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --htrim-left GT --htrim-right CA --htrim-min-length 3 --htrim-max-length 5 --htrim-max-first --htrim-adapter --threads $ENV{num_threads} --align-log ALL | flexbar --reads - --interleaved --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20.fasta --adapter-trim-end RIGHT --threads $ENV{num_threads} --align-log ALL};
+$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --stdout-reads --adapters $ENV{adapter_dir}/tso_wo_hp.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --htrim-left GT --htrim-right CA --htrim-min-length 3 --htrim-max-length 5 --htrim-max-first --htrim-adapter --min-read-length 2 --threads $ENV{num_threads} --align-log ALL | flexbar --reads - --interleaved --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20.fasta --adapter-trim-end RIGHT --min-read-length 2 --threads $ENV{num_threads} --align-log ALL};
 print {*STDERR} "$cmd";
 system $cmd;
 
