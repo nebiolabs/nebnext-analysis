@@ -92,7 +92,10 @@ $cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fa
 print {*STDERR} "$cmd";
 system $cmd;
 
-# remove "_1" and "_2" appended to reads 1 and 2 by flexbar interleave/deinterleave process:
+# remove "_1" and "_2" appended to reads 1 and 2 by flexbar
+# interleave/deinterleave process, which interfere with
+# manipulating the expected/observed test output using "diff":
+
 $cmd = q{perl -i -lpe "if (\$. % 4 == 1) { s{_[12]\z}{}xms; }" } .
        qq{$ENV{obs_dir}/$val{library}_[12].fastq};
 print {*STDERR} "$cmd";
