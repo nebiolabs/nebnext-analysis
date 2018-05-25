@@ -1,10 +1,10 @@
-test_name	test_description	exp	settings	is_ok
-r1_ins_1_40_ilmn_13_fwd	illumina at r1 3p end and r2 3p end, trimmed 3p ends overhang	trimmed	end_right.adp_ilmn_13	ok
-r1_ins_1_59_ilmn_13_fwd	illumina at r1 3p end and r2 3p end, trimmed reads do not overhang	trimmed	end_right.adp_ilmn_13	ok
-r1_ins_1_40_tso_full_g5_rev	tso_full_g5_fwd revcomp at r1 3p end, tso_full_g5_fwd at r2 5p end	trimmed	end_left.adp_tso.new	not ok, only r2 is trimmed, r1 is not trimmed
-r1_ins_1_28_tso_full_g5_rev	tso_full_g5_fwd revcomp at r1 3p end, tso_full_g5_fwd at r2 5p end	trimmed	end_left.adp_tso.new	not ok, only r2 is trimmed, r1 is not trimmed
-r1_tso_full_t29_fwd_1_66_ins	tso_full_t29_fwd at r1 5p end, then 10 nt insert, Q=2; no adapter in r2	discarded	end_left.adp_tso.new	ok
-r1_tso_full_t39_fwd_1_76_no_ins	tso_full_t39_fwd at r1 5p end, no insert; no adapter in r2	discarded	end_left.adp_tso.new	ok 
-r2_tso_full_t39_fwd_1_76_no_ins	tso_full_t39_fwd at r2 5p end, no insert; no adapter in r1	discarded	end_left.adp_tso.new	ok
-r1_tso_full_g4_fwd_1_43_ins_44_76	tso_full_g4_fwd at r1 5p end, then 33 nt insert; no adapter in r2	trimmed	end_left.adp_tso.new	ok
-r2_tso_full_g4_fwd_1_43_ins_44_76	tso_full_g4_fwd at r2 5p end, then 33 nt insert; no adapter in r1	trimmed	end_left.adp_tso.new	ok
+test_name	test_description	exp	is_ok
+r1_ins_1_28_tso_full_g5_rev	tso_full_g5_fwd revcomp at r1 3p end, tso_full_g5_fwd at r2 5p end	trimmed	ok
+r1_ins_1_40_ilmn_13_fwd	illumina at r1 3p end and r2 3p end, trimmed 3p ends overhang	trimmed	ok
+r1_ins_1_40_tso_full_g5_rev	tso_full_g5_fwd revcomp at r1 3p end, tso_full_g5_fwd at r2 5p end	trimmed	ok
+r1_ins_1_59_ilmn_13_fwd	illumina at r1 3p end and r2 3p end, trimmed reads do not overhang	trimmed	ok
+r1_tso_full_g4_fwd_1_43_ins_44_76	tso_full_g4_fwd at r1 5p end, then 33 nt insert; no adapter in r2	trimmed	ok
+r1_tso_full_t29_fwd_1_66_ins	tso_full_t29_fwd at r1 5p end, then 10 nt insert, Q=2; no adapter in r2	trimmed	ok
+r1_tso_full_t39_fwd_1_76_no_ins	tso_full_t39_fwd at r1 5p end, no insert; no adapter in r2	discarded	ok 
+r2_tso_full_g4_fwd_1_43_ins_44_76	tso_full_g4_fwd at r2 5p end, then 33 nt insert; no adapter in r1	trimmed	ok
+r2_tso_full_t39_fwd_1_76_no_ins	tso_full_t39_fwd at r2 5p end, no insert; no adapter in r1	discarded	ok
