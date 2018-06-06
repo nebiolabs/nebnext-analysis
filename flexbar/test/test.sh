@@ -89,14 +89,14 @@ $val{library} = $_;
 
 $cmd = join q{ },
         qq{flexbar},
-        qq{--reads  $ENV{fastq_dir}/$val{library}_1.fastq},
+        qq{--reads $ENV{fastq_dir}/$val{library}_1.fastq},
         qq{--reads2 $ENV{fastq_dir}/$val{library}_2.fastq},
         qq{--stdout-reads},
         qq{--adapters $ENV{adapter_dir}/tso_g_wo_hp.fasta},
         qq{--adapter-trim-end LEFT},
         qq{--adapter-revcomp ON},
         qq{--adapter-revcomp-end RIGHT},
-        qq{--htrim-left  GT},
+        qq{--htrim-left GT},
         qq{--htrim-right CA},
         qq{--htrim-min-length 3},
         qq{--htrim-max-length 5},
@@ -116,21 +116,11 @@ $cmd = join q{ },
         qq{--threads $ENV{num_threads}},
 
         qq{;},
-        qq{mv flexbarOut.log                  $ENV{obs_dir}/$val{library}.1.log},
+        qq{mv flexbarOut.log $ENV{obs_dir}/$val{library}.1.log},
         qq{;},
         qq{mv $ENV{obs_dir}/$val{library}.log $ENV{obs_dir}/$val{library}.2.log},
         ;
 
-print {*STDERR} "$cmd";
-system $cmd;
-
-# remove "_1" and "_2" appended to reads 1 and 2 by flexbar
-# interleave/deinterleave process, which interfere with
-# manipulating the expected/observed test output using "diff":
-
-$cmd = join q{ },
-        q{perl -i -lpe "if (\$. % 4 == 1) { s{_[12]\z}{}xms; }"},
-       qq{$ENV{obs_dir}/$val{library}_[12].fastq};
 print {*STDERR} "$cmd";
 system $cmd;
 
