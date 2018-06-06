@@ -87,7 +87,39 @@ BEGIN {
 $status = 0;
 $val{library} = $_;
 
-$cmd = qq{flexbar --reads $ENV{fastq_dir}/$val{library}_1.fastq --reads2 $ENV{fastq_dir}/$val{library}_2.fastq --stdout-reads --adapters $ENV{adapter_dir}/tso_g_wo_hp.fasta --adapter-trim-end LEFT --adapter-revcomp ALSO --adapter-revcomp-end RIGHT --htrim-left GT --htrim-right CA --htrim-min-length 3 --htrim-max-length 5 --htrim-max-first --htrim-adapter --min-read-length 2 --threads $ENV{num_threads} | flexbar --reads - --interleaved --target $ENV{obs_dir}/$val{library} --adapters $ENV{adapter_dir}/ilmn_20_2_seqs.fasta --adapter-trim-end RIGHT --min-read-length 2 --threads $ENV{num_threads}; mv flexbarOut.log $ENV{obs_dir}/$val{library}.1.log; mv $ENV{obs_dir}/$val{library}.log $ENV{obs_dir}/$val{library}.2.log};
+$cmd = join q{ },
+        qq{flexbar},
+        qq{--reads  $ENV{fastq_dir}/$val{library}_1.fastq},
+        qq{--reads2 $ENV{fastq_dir}/$val{library}_2.fastq},
+        qq{--stdout-reads},
+        qq{--adapters $ENV{adapter_dir}/tso_g_wo_hp.fasta},
+        qq{--adapter-trim-end LEFT},
+        qq{--adapter-revcomp ALSO},
+        qq{--adapter-revcomp-end RIGHT},
+        qq{--htrim-left  GT},
+        qq{--htrim-right CA},
+        qq{--htrim-min-length 3},
+        qq{--htrim-max-length 5},
+        qq{--htrim-max-first},
+        qq{--htrim-adapter},
+        qq{--min-read-length 2},
+        qq{--threads $ENV{num_threads}},
+
+        qq{|},
+        qq{flexbar},
+        qq{--reads -},
+        qq{--interleaved},
+        qq{--target $ENV{obs_dir}/$val{library}},
+        qq{--adapters $ENV{adapter_dir}/ilmn_20_2_seqs.fasta},
+        qq{--adapter-trim-end RIGHT},
+        qq{--min-read-length 2},
+        qq{--threads $ENV{num_threads}},
+
+        qq{;},
+        qq{mv flexbarOut.log                  $ENV{obs_dir}/$val{library}.1.log},
+        qq{;},
+        qq{mv $ENV{obs_dir}/$val{library}.log $ENV{obs_dir}/$val{library}.2.log},
+        ;
 
 print {*STDERR} "$cmd";
 system $cmd;
@@ -96,7 +128,8 @@ system $cmd;
 # interleave/deinterleave process, which interfere with
 # manipulating the expected/observed test output using "diff":
 
-$cmd = q{perl -i -lpe "if (\$. % 4 == 1) { s{_[12]\z}{}xms; }" } .
+$cmd = join q{ },
+        q{perl -i -lpe "if (\$. % 4 == 1) { s{_[12]\z}{}xms; }"},
        qq{$ENV{obs_dir}/$val{library}_[12].fastq};
 print {*STDERR} "$cmd";
 system $cmd;
@@ -110,7 +143,11 @@ for $mate (1, 2) {
         print {*STDERR} "$cmd";
         system $cmd;
 
-        $cmd = qq{diff $ENV{exp_dir}/$val{library}_${mate}.fastq $ENV{obs_dir}/$val{library}_${mate}.fastq >/dev/null};
+        $cmd = join q{ },
+                qq{diff},
+                qq{$ENV{exp_dir}/$val{library}_${mate}.fastq},
+                qq{$ENV{obs_dir}/$val{library}_${mate}.fastq},
+                qq{>/dev/null};
         print {*STDERR} "$cmd";
         system $cmd and $status++;
 }
